@@ -1,12 +1,12 @@
 from optparse import OptionParser
 
-import ontology_graph
-import load_ontology
+from . import ontology_graph
+from . import load_ontology
 
 ONT_NAME_TO_ONT_ID = {"EFO_CL_DOID_UBERON_CVCL":"17"}
 ONT_ID_TO_OG = {
     x:load_ontology.load(x)[0] 
-    for x in ONT_NAME_TO_ONT_ID.values()
+    for x in list(ONT_NAME_TO_ONT_ID.values())
 }
 
 def main():
@@ -15,7 +15,7 @@ def main():
     for res in results:
         print ONT_ID_TO_OG["17"].id_to_term[res].name
     """
-    print get_term_name_and_synonyms("CL:0000134")   
+    print(get_term_name_and_synonyms("CL:0000134"))   
  
 
 #########################################################
@@ -24,16 +24,16 @@ def main():
 
 def example_is_descendant():
     # True
-    print is_descendant(
+    print(is_descendant(
         "CL:0000134",   # mesenchymal stem cell 
         "CL:0000034"    # stem cell
-    )
+    ))
 
     # False
-    print is_descendant(
+    print(is_descendant(
         "CL:0000134",   # mesenchymal stem cell 
         "CL:0000540"    # neuron
-    )
+    ))
 
 #########################################################
 #   the API
