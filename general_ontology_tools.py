@@ -39,12 +39,32 @@ def example_is_descendant():
 #   the API
 #########################################################
 
-def get_ontology_object():
-    return ONT_ID_TO_OG["17"]
+def get_ontology_object(ont_id="17"):
+    """
+    Returns
+    -------
+    The ontology object
+    """
+    return ONT_ID_TO_OG[ont_id]
 
-def get_term_name(term_id):
-    og = ONT_ID_TO_OG["17"]
+
+def get_term_name(term_id, ont_id="17"):
+    """
+    Given a term ID, return the term name.
+
+    Parameters
+    ----------
+    term_id
+        The ontology term ID.
+
+    Returns
+    ---------
+    The term name.
+
+    """
+    og = ONT_ID_TO_OG[ont_id]
     return og.id_to_term[term_id].name
+
 
 def get_term_name_and_synonyms(term_id):
     og = ONT_ID_TO_OG["17"]
@@ -55,6 +75,47 @@ def get_term_name_and_synonyms(term_id):
         t_strs.add(syn.syn_str)
     return list(t_strs) 
 
+
+def descendants(term_id, ont_id="17")):
+    """
+    Get the descendant terms for a given input term.
+
+    Parameters
+    ----------
+    term_id
+        The ontology term ID.
+
+    Returns
+    ---------
+    The term ID's of the descendant terms in the ontology.
+    """
+    og = ONT_ID_TO_OG[ont_id]
+    return og.recursive_relationship(
+        term_id, 
+        recurs_relationships=['inv_is_a', 'inv_part_of']
+    ) 
+
+
+def ancestors(term_id, ont_id="17")):
+    """
+    Get the ancestor terms for a given input term.
+
+    Parameters
+    ----------
+    term_id
+        The ontology term ID.
+
+    Returns
+    ---------
+    The term ID's of the descendant terms in the ontology.
+    """
+    og = ONT_ID_TO_OG[ont_id]
+    return og.recursive_relationship(
+        term_id,   
+        recurs_relationships=['is_a', 'part_of']
+    )
+
+
 def is_descendant(descendent, ancestor):
     og = ONT_ID_TO_OG["17"]
     sup_terms = og.recursive_relationship(
@@ -62,6 +123,7 @@ def is_descendant(descendent, ancestor):
         recurs_relationships=['is_a', 'part_of']
     )
     return ancestor in set(sup_terms)
+
 
 def get_descendents_within_radius(term_id, radius):
     return _get_terms_within_radius(
@@ -77,9 +139,6 @@ def get_ancestors_within_radius(term_id, radius):
         relationships=['is_a']
     )
 
-#########################################################
-#   helper functions
-#########################################################
 
 def _get_terms_within_radius(
     term_id, 
@@ -87,7 +146,6 @@ def _get_terms_within_radius(
     relationships
     ):
     og = ONT_ID_TO_OG["17"]
-
     result_terms = set()
     next_batch = set([term_id])
     for i in range(radius):
@@ -101,7 +159,6 @@ def _get_terms_within_radius(
                     )
         result_terms.update(new_next_batch) 
         next_batch = new_next_batch
-                         
     return result_terms
 
 if __name__ == "__main__":
