@@ -1,8 +1,8 @@
 import pkg_resources as pr
 import json
 
-from . import config
-from . import ontology_graph
+import config
+import ontology_graph
 
 def load(ontology_index):
     resource_package = __name__

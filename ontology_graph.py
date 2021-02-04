@@ -9,7 +9,7 @@ try:
     import pygraphviz as pgv
 except:
     print("Unable to import pygraphviz. Visualization is disabled.")
-from . import config
+import config
 
 import pkg_resources as pr
 import os

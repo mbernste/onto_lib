@@ -1,7 +1,7 @@
 from optparse import OptionParser
 
-from . import ontology_graph
-from . import load_ontology
+import ontology_graph
+import load_ontology
 
 ONT_NAME_TO_ONT_ID = {"EFO_CL_DOID_UBERON_CVCL":"17"}
 ONT_ID_TO_OG = {
@@ -14,9 +14,11 @@ def main():
     results = get_ancestors_within_radius("CL:0000034", 4)
     for res in results:
         print ONT_ID_TO_OG["17"].id_to_term[res].name
+
+    print(get_term_name_and_synonyms("CL:0000134"))
     """
-    print(get_term_name_and_synonyms("CL:0000134"))   
- 
+
+    print(most_specific_terms(["CL:0000134", "CL:0000034", "CL:0000540"])) 
 
 #########################################################
 #   examples
@@ -76,7 +78,7 @@ def get_term_name_and_synonyms(term_id):
     return list(t_strs) 
 
 
-def descendants(term_id, ont_id="17")):
+def descendants(term_id, ont_id="17"):
     """
     Get the descendant terms for a given input term.
 
@@ -96,7 +98,7 @@ def descendants(term_id, ont_id="17")):
     ) 
 
 
-def ancestors(term_id, ont_id="17")):
+def ancestors(term_id, ont_id="17"):
     """
     Get the ancestor terms for a given input term.
 
@@ -130,10 +132,35 @@ def most_specific_terms(term_ids, ont_id="17"):
     That is, all term ID's within `term_ids` that do not have a 
     descendant in `term_ids`.
     """
+    og = ONT_ID_TO_OG[ont_id]
     rels = ['is_a', 'part_of']
     return ontology_graph.most_specific_terms(
         term_ids, 
         og, 
+        sup_relations=rels
+    )
+
+
+def most_general_terms(term_ids, ont_id="17"):
+    """
+    Filter a set of ontology terms to only their most general terms.
+    
+    Parameters
+    ----------
+    term_ids
+        A collection of term ID's to be filtered.
+    
+    Returns
+    -------
+    A collection of term ID's within `term_ids` that are most general.
+    That is, all term ID's within `term_ids` that do not have an 
+    ancestor in `term_ids`.
+    """
+    og = ONT_ID_TO_OG[ont_id]
+    rels = ['inv_is_a', 'inv_part_of']
+    return ontology_graph.most_specific_terms(
+        term_ids,
+        og,
         sup_relations=rels
     )
 
