@@ -115,6 +115,28 @@ def ancestors(term_id, ont_id="17")):
         recurs_relationships=['is_a', 'part_of']
     )
 
+def most_specific_terms(term_ids, ont_id="17"):
+    """
+    Filter a set of ontology terms to only their most specific terms.
+    
+    Parameters
+    ----------
+    term_ids
+        A collection of term ID's to be filtered.
+    
+    Returns
+    -------
+    A collection of term ID's within `term_ids` that are most-specific.
+    That is, all term ID's within `term_ids` that do not have a 
+    descendant in `term_ids`.
+    """
+    rels = ['is_a', 'part_of']
+    return ontology_graph.most_specific_terms(
+        term_ids, 
+        og, 
+        sup_relations=rels
+    )
+
 
 def is_descendant(descendent, ancestor):
     og = ONT_ID_TO_OG["17"]
