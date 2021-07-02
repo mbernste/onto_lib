@@ -1,0 +1,12 @@
+[flake8]
+exclude =
+    metadata
+    __pycache__
+    env
+    .env
+    manage.py
+    settings.py
+    obo
+    *.json
+    venv
+    .venv
