@@ -311,14 +311,18 @@ def parse_obos(ont_to_loc, restrict_to_idspaces=None, include_obsolete=False):
         add_inverse_relationship_to_parents(term, "is_a", "inv_is_a", id_to_term)
         add_inverse_relationship_to_parents(term, "part_of", "inv_part_of", id_to_term)
 
-    # return OntologyGraph(id_to_term, name_to_ids)
     return OntologyGraph(id_to_term)
 
 
 def process_chunk_of_lines(curr_lines, restrict_to_idspaces,
                            name_to_ids, id_to_term, include_obsolete):
-    entity_term, term, is_obsolete = parse_entity(curr_lines, restrict_to_idspaces)
-    if entity_term == ENTITY_TERM:
+    entity = parse_entity(curr_lines, restrict_to_idspaces)
+    if not entity:
+        if VERBOSE:
+            print("ERROR!")
+    elif entity[0] == ENTITY_TERM:
+        term = entity[1]
+        is_obsolete = entity[2]
         if not is_obsolete or include_obsolete:
             id_to_term[term.id] = term
             if term.name not in name_to_ids:
