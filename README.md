@@ -1,5 +1,7 @@
 # onto-lib
 
+![Build Status](https://github.com/Bishop-Laboratory/onto_lib/workflows/package/badge.svg)
+
 A library for loading, querying, and processing biomedical ontologies from OBO files.
 
 ### Ontologies included
